@@ -1,16 +1,15 @@
 <html>
-  <title>Priority Matrix</title>
   <head>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
-       google.charts.load('current', {'packages':['corechart', 'controls']});
+       google.charts.load('current', {'packages':['corechart', 'controls','table']});
 
       // Set a callback to run when the Google Visualization API is loaded.
       google.charts.setOnLoadCallback(initialize);
 
       function initialize() {
         var query = new google.visualization.Query(
-            'https://docs.google.com/spreadsheets/d/1zSx0034nGvjlZSufEE9-B_pavuwmeJufi1r7n98mfkk/gviz/tq?gid=1248477434&headers=1&range=A1:L1000');
+            'https://docs.google.com/spreadsheets/d/1zSx0034nGvjlZSufEE9-B_pavuwmeJufi1r7n98mfkk/gviz/tq?gid=1248477434&headers=1&range=A1:G1000');
         query.send(draw);
       }
 
@@ -20,11 +19,19 @@
           return;
         }
 
-        var control = new google.visualization.ControlWrapper({
+        var filter_type = new google.visualization.ControlWrapper({
           controlType: 'CategoryFilter',
-          containerId: 'control_div',
+          containerId: 'filter_type_div',
           options: {
             filterColumnLabel: 'Type'
+          }
+        });
+
+        var filter_status = new google.visualization.ControlWrapper({
+          controlType: 'CategoryFilter',
+          containerId: 'filter_status_div',
+          options: {
+            filterColumnLabel: 'Status'
           }
         });
   
@@ -55,6 +62,10 @@
                   },
               ticks: [5,10]
             },
+            sizeAxis: {
+              minValue:0,
+              maxValue:10
+            },
             bubble: {
               textStyle: {
                 fontSize: 9,
@@ -63,20 +74,52 @@
             }
             }
           });
+
+        var table = new google.visualization.ChartWrapper({   
+          chartType: 'Table',
+          containerId: 'table_div',
+          options: {
+            sortColumn: 6,
+            sortAscending: false,
+            sort: 'enable',
+            page: 'enable',
+            pagesize: 5
+          }
+        });
         var dashboard = new google.visualization.Dashboard(document.getElementById('dashboard'));
-        dashboard.bind(control,chart);
+        dashboard.bind(filter_status,[chart,table]);
+        dashboard.bind(filter_type,[chart,table]);
         dashboard.draw(data);    
       }
     </script>
+    <style>
+      #filter_type_div {
+        margin: auto;
+        width: 50%;
+        padding: 10px;
+      }
+      #filter_status_div {
+        margin: auto;
+        width: 50%;
+        padding: 10px;
+      }
+      #table_div {
+        margin: auto;
+        width: 50%;
+        padding: 10px;
+      }
+    </style>
   </head>
 
   <body>
     <table align="center">
       <tr>
-        <td colSpan=1>
+        <td colSpan=2>
           <div id="dashboard">
-            <div id="control_div"></div>
             <div id="chart_div"></div>
+            <div id="filter_type_div"></div>
+            <div id="filter_status_div"></div>
+            <div id="table_div"></div>
           </div>
         </td>
       </tr>
