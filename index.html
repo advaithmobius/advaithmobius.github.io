@@ -1,4 +1,5 @@
 <html>
+  <title>Advaith's Priority Matrix</title>
   <head>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
@@ -30,6 +31,9 @@
         var filter_status = new google.visualization.ControlWrapper({
           controlType: 'CategoryFilter',
           containerId: 'filter_status_div',
+          state:{
+            selectedValues: ['Ongoing','Not Started']
+          },
           options: {
             filterColumnLabel: 'Status'
           }
